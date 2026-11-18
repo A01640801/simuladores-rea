@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Monte Carlo Decision Lab · Open Educational Simulator</title>
+<style>
+:root{--navy:#132f3d;--navy2:#204d5a;--teal:#087d86;--teal2:#0c9aa2;--rose:#cc655d;--ink:#18313b;--muted:#5c737d;--line:#dbe5e8;--paper:#f4f8f8;--white:#fff;--pale:#e5f5f4;--cream:#fff7e6;--warn:#845b17;--shadow:0 15px 38px rgba(15,47,61,.07)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.58 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button,select,input,textarea{font:inherit}button{cursor:pointer}a{color:var(--teal)}:focus-visible{outline:3px solid #f5ad36;outline-offset:3px}button:disabled{opacity:.45;cursor:not-allowed}
+.topbar{background:#112d3b;color:white;padding:0 24px;border-bottom:3px solid #0a9298}.topbar-inner{max-width:1290px;margin:auto;min-height:62px;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{display:flex;gap:11px;align-items:center;font-size:12px;letter-spacing:.11em;font-weight:750}.brandmark{font-size:20px;display:grid;place-items:center;width:38px;height:38px;border:1px solid #5e8b92;border-radius:12px;background:#204b57}.top-chip{border:1px solid #50727b;border-radius:999px;padding:6px 12px;color:#c9e4e5;font-size:12px;white-space:nowrap}
+.container{max-width:1290px;margin:0 auto;padding:24px}.hero{background:linear-gradient(115deg,#153645,#123a44 75%,#117d83);border-radius:24px;color:white;padding:35px 40px;display:flex;gap:24px;justify-content:space-between;align-items:center;box-shadow:var(--shadow)}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.2em;font-weight:760;color:#c2e9e8}.hero h1{font-size:clamp(27px,3.8vw,43px);line-height:1.13;letter-spacing:-.035em;margin:10px 0}.hero p{max-width:640px;color:#d3e5e8;margin:10px 0 0}.hero-figure{min-width:190px;display:grid;gap:6px;justify-items:center;border:1px solid #669399;border-radius:19px;padding:18px 22px;background:#ffffff0b}.hero-figure b{font-size:36px;line-height:1.1}.hero-figure span{font-size:12px;color:#cee8e8}
+.meta{display:flex;flex-wrap:wrap;gap:10px;margin:17px 0 24px}.pill{background:white;border:1px solid var(--line);border-radius:999px;padding:7px 12px;color:var(--navy2);font-size:12px;font-weight:650}.layout{display:grid;grid-template-columns:272px minmax(0,1fr);gap:22px;align-items:start}.sidebar{position:sticky;top:16px}.panel,.sidepanel{background:white;border:1px solid var(--line);border-radius:19px;box-shadow:var(--shadow)}.sidepanel{padding:19px;margin-bottom:15px}.section-kicker{color:var(--teal);font-size:11px;letter-spacing:.15em;text-transform:uppercase;font-weight:850}.sidepanel h2{font-size:15px;margin:5px 0 13px}.stage-link{display:flex;align-items:center;gap:10px;text-align:left;padding:10px 9px;border-radius:11px;background:transparent;border:1px solid transparent;width:100%;font-size:12.5px;color:var(--ink);transition:.12s}.stage-link:hover{background:#f1f6f7}.stage-link[aria-current="step"]{background:var(--pale);border-color:#c7e4e5;color:#075f66;font-weight:800}.stage-number{display:grid;place-items:center;width:26px;min-width:26px;height:26px;border:1px solid #c2d5d9;color:var(--muted);border-radius:50%;font-size:11px;font-weight:800}.stage-link[aria-current="step"] .stage-number{background:var(--teal);color:white;border-color:var(--teal)}.stage-link small{margin-left:auto;color:var(--muted);font-size:11px;white-space:nowrap}.sidepanel p{color:var(--muted);font-size:12px;line-height:1.5;margin:9px 0}.sidebar label,.entry label{font-size:12px;color:#314d57;font-weight:760;display:block;margin:8px 0 5px}.sidebar input,.entry input,.entry select,.entry textarea{width:100%;background:white;border:1px solid #c7d7dc;border-radius:10px;padding:10px 12px;color:var(--ink)}.entry textarea{min-height:81px;resize:vertical}.entry select{cursor:pointer}.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.aside-note{font-size:11px!important;color:#617780!important}.status-dot{display:inline-block;border-radius:50%;width:8px;height:8px;background:#d9a241;margin-right:6px}.status-dot.ready{background:#18a675}
+.content{min-width:0}.mainpanel{padding:30px}.headerline{display:flex;align-items:center;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-bottom:16px}.stepbadge{background:#e6f4f4;padding:7px 12px;border-radius:999px;color:#0b747b;font-size:12px;font-weight:800}.minutes{color:var(--muted);font-size:12px}.mainpanel h2{font-size:clamp(23px,3vw,30px);margin:0 0 11px;letter-spacing:-.025em;line-height:1.2}.lead{color:var(--muted);font-size:15px;max-width:860px;margin:5px 0 22px}.formula{padding:17px 18px;border-radius:13px;background:#e8f3f4;border-left:4px solid var(--teal);font-weight:770;font-size:clamp(13px,2.2vw,18px);letter-spacing:-.015em;overflow:auto;margin:14px 0}.callout{padding:14px 16px;background:var(--cream);border:1px solid #eddcae;border-radius:12px;color:#684f27;margin:16px 0;font-size:13px}.callout strong{color:#5e481f}.prompt{background:#f0f7f7;border:1px solid #d2e8e7;border-radius:13px;padding:17px;margin:21px 0 0}.prompt h3{font-size:15px;margin:0 0 5px}.prompt p{color:#46616a;font-size:13px;margin:0 0 10px}.prompt label{font-size:12px}.prompt textarea{width:100%;min-height:84px;border:1px solid #bad0d4;border-radius:10px;padding:11px;resize:vertical}.prompt select{width:100%;max-width:370px;padding:11px;border:1px solid #bad0d4;border-radius:10px;background:white}
+.big-number{font-size:clamp(32px,5vw,54px);font-weight:840;color:#086d73;line-height:1.1;letter-spacing:-.045em}.metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:15px 0}.metric{border:1px solid #dce9ea;background:#fafdfd;padding:17px;border-radius:13px;min-width:0}.metric .val{display:block;font-size:clamp(16px,2.3vw,25px);font-weight:840;letter-spacing:-.035em;line-height:1.1;margin:7px 0 3px;word-break:break-word;font-variant-numeric:tabular-nums}.metric .lbl{color:#627983;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}.metric .sub{font-size:11px;color:#647983}.metric.loss .val{color:#b34f46}.metric.good .val{color:#06797e}.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.mini-card{border:1px solid var(--line);padding:19px;border-radius:15px;background:#fff}.mini-card h3{font-size:15px;margin:0 0 8px}.mini-card p{font-size:13px;color:var(--muted);margin:6px 0}.mini-card .subvalue{font-size:22px;font-weight:800}
+.tablewrap{width:100%;overflow:auto;border:1px solid var(--line);border-radius:13px;margin:15px 0}.tablewrap table{border-collapse:collapse;width:100%;font-size:12.5px}.tablewrap th{background:#ebf3f4;font-size:11px;letter-spacing:.03em;text-align:left;color:#345663;white-space:nowrap}.tablewrap th,.tablewrap td{padding:11px 12px;border-bottom:1px solid #e5ecee;vertical-align:top}.tablewrap tr:last-child td{border:0}.tablewrap td.num,.tablewrap th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.tablewrap tr.highlight{background:#f0faf9}.tablewrap td small{color:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;gap:9px;align-items:end;padding:19px;background:#f1f8f8;border:1px solid #d6e9e9;border-radius:15px}.controls label{font-size:12px;font-weight:750;display:block;margin-bottom:4px}.controls input{width:138px;border:1px solid #bbd1d6;background:white;padding:9px;border-radius:8px}.btn{display:inline-flex;justify-content:center;align-items:center;gap:7px;padding:11px 18px;border-radius:11px;border:1px solid #b7d1d5;background:white;font-weight:760;color:#18414a;font-size:13px;transition:.15s;text-decoration:none}.btn:hover{background:#eaf5f6}.btn.primary{background:var(--teal);border-color:var(--teal);color:white}.btn.primary:hover{background:#056970}.btn.secondary{background:var(--navy);color:white;border-color:var(--navy)}.btn.small{padding:8px 12px;font-size:12px}.actions{display:flex;justify-content:space-between;gap:10px;align-items:center;border-top:1px solid var(--line);margin-top:29px;padding-top:19px}.actions .next{display:flex;gap:8px}.running-status{font-size:12px;color:#336c72;margin:11px 0;min-height:17px}.smallprint{color:var(--muted);font-size:12px}.chart-area{margin:18px 0;border:1px solid #dbe6e8;border-radius:15px;background:#fff;padding:13px;overflow:hidden}.chart-area svg{width:100%;height:auto;display:block}.legend{display:flex;gap:17px;flex-wrap:wrap;font-size:11px;color:#506975;padding:0 4px}.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}.bars{margin:18px 0}.bar-row{display:grid;grid-template-columns:140px 1fr 68px;gap:9px;align-items:center;margin:15px 0;font-size:12px}.bar-track{height:18px;border-radius:5px;background:#edf3f4;overflow:hidden;position:relative}.bar-fill{height:100%;border-radius:5px}.bar-row b{text-align:right;font-variant-numeric:tabular-nums}.answerline{font-size:12px;color:#3b6771;margin:5px 0}.footer-note{margin:18px 0;text-align:center;color:#718791;font-size:11px}.reportbox{width:100%;height:395px;resize:vertical;background:#f9fcfc;border:1px solid #cbdde0;border-radius:12px;padding:14px;font:12px/1.55 ui-monospace,Consolas,Monaco,monospace;color:#203a43;white-space:pre-wrap}.complete{background:#eaf7ef;border-color:#b8dfc3;color:#1f6c46}.incomplete{background:#fff7e5;border-color:#ead49b;color:#735414}.report-alert{border:1px solid;border-radius:11px;padding:11px 13px;font-size:12px;margin:12px 0}.hidden{display:none!important}.label-inline{display:flex;align-items:center;gap:8px;font-size:13px}.help{display:inline-block;color:#6a8790;font-size:11px}.muted{color:var(--muted)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{position:static}.sidepanel.navpanel{padding:14px}.stage-list{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.stage-link{padding:7px;gap:6px;font-size:11px}.stage-link small{display:none}.sidepanel h2{margin-bottom:9px}.hero{padding:26px}.hero-figure{min-width:140px}.formgrid{grid-template-columns:1fr 1fr}}
+@media(max-width:610px){.container{padding:13px}.topbar{padding:0 13px}.top-chip{display:none}.hero{display:block;padding:24px 21px}.hero-figure{margin-top:17px;display:flex;justify-content:center;gap:12px}.hero-figure b{font-size:25px}.mainpanel{padding:19px}.stage-list{grid-template-columns:repeat(2,1fr)}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.two,.formgrid{grid-template-columns:1fr}.bar-row{grid-template-columns:105px 1fr 55px}.actions .next{flex-wrap:wrap;justify-content:end}}
+@media print{body{background:white}.topbar,.sidebar,.actions,.controls,.btn{display:none!important}.layout{display:block}.container{padding:0}.mainpanel{box-shadow:none;border:0}.hero{color:#18313b;background:white;padding:10px}.hero-figure{display:none}}
+
+.topbar-inner{flex-wrap:wrap;padding-block:9px}.top-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}.lang-switch{display:flex;align-items:center;gap:3px;border:1px solid #5d8992;padding:3px;border-radius:999px;background:#082530}.lang-switch button{border:0;border-radius:999px;padding:7px 12px;background:transparent;color:#daeef0;font-size:12px;font-weight:750;line-height:1.2}.lang-switch button[aria-pressed="true"]{background:#fff;color:#0c3b43;box-shadow:0 1px 5px #0003}.lang-switch button:hover:not([aria-pressed="true"]){background:#244b58}.lang-switch button:focus-visible{outline:3px solid #f5ad36}.skip-link{position:absolute;left:-999px;top:0;background:#fff;color:#123b48;padding:10px 15px;z-index:99}.skip-link:focus{left:10px}.topbar .brand{letter-spacing:.075em}.mini-card,.callout{overflow-wrap:anywhere}.reportbox{overflow-wrap:anywhere}.stage-link span:nth-child(2){line-height:1.35}.tablewrap{scrollbar-width:thin}.chart-area svg text{font-family:Inter,system-ui,Arial,sans-serif}.chart-area svg{min-width:450px}.chart-area{overflow-x:auto}.simple-intro{color:var(--muted);font-size:13px;line-height:1.6}.section-kicker{line-height:1.5}.meta .pill{line-height:1.35}.entry select{max-width:100%}
+@media(max-width:610px){.hero-figure{display:grid;grid-template-columns:100px minmax(0,1fr);gap:3px 14px;align-items:center;justify-items:start}.hero-figure b{grid-row:span 2;white-space:nowrap;flex-shrink:0}.hero-figure span{font-size:11px}.topbar-inner{align-items:flex-start;gap:10px}.topbar .brand{font-size:10px}.top-right{width:100%;justify-content:space-between}.lang-switch{margin-left:auto}.hero-figure span{font-size:10px}.mainpanel .formula{line-height:1.5}.reportbox{height:355px}}
+
+/* IA TOUR edition: unified pastel design, both original engines preserved. */
+:root{
+ --ink:#263b4b;--muted:#627788;--paper:#f7f8f6;--line:#dae5e5;
+ --teal:#497f82;--teal2:#649a9d;--orange:#be9277;--purple:#9992b5;
+ --navy:#34525c;--navy2:#4d7077;--rose:#c28d94;--white:#fff;
+ --pale:#e9f3f0;--cream:#faf5ec;--warn:#856a52;
+ --shadow:0 8px 24px rgba(40,69,75,.055);
+}
+body{background:var(--paper);color:var(--ink)}
+.card,.panel,.sidepanel{border-color:var(--line);box-shadow:var(--shadow)}
+a{color:var(--teal)}
+button.primary,.btn.primary{background:var(--teal);border-color:var(--teal);color:white}
+button.primary:hover,.btn.primary:hover{background:#3c6c70}
+button,select,input,textarea{transition:border-color .15s,background .15s}
+button:hover,.btn:hover{background:#eaf2f0}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #e5b994;outline-offset:2px}
+.pill,.badge,.stepbadge{background:#f0f6f3;color:#3b6b72;border-color:var(--line)}
+.notice,.prompt,.controls,.metric,.task{background:#edf5f2;border-color:#d6e8e2}
+.author-credit{font-size:12px;color:#59727e;border-top:1px solid var(--line);margin:22px auto 0;padding:14px 4px;max-width:1290px;display:flex;gap:8px 16px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.author-credit strong{color:var(--ink)}
+.author-credit a{color:var(--teal);text-decoration:none;border-bottom:1px solid #8ab1ac}
+.author-credit a:hover{text-decoration:underline}
+@media print{.author-credit{display:block;margin-top:14px;font-size:10px}}
+
+.topbar{background:#eaf2ef;border-bottom:2px solid #cbded9;color:var(--ink)}
+.topbar .brand{color:var(--ink)}
+.brandmark{background:#dcece6;border-color:#c5ded5;color:#446f73}
+.top-chip{border-color:#cbded9;color:#587783;background:#f8fbf9}
+.lang-switch{background:#f5faf8;border:1px solid #c6dcd8}
+.lang-switch button{color:#52737a}
+.lang-switch button[aria-pressed="true"]{color:#25464d;background:#dfece7;box-shadow:none}
+.lang-switch button:hover:not([aria-pressed="true"]){background:#e2efeb}
+.hero{background:linear-gradient(115deg,#e5f0ed,#eff3ee 82%,#e5eaf1);color:var(--ink);box-shadow:none;border:1px solid #d6e6e1}
+.hero h1{color:var(--ink)}.hero p{color:var(--muted)}.hero .eyebrow{color:var(--teal)}
+.hero-figure{border-color:#bcd7d1;background:#fff9;color:var(--ink)}
+.hero-figure span{color:#5a747d}.hero-figure b{color:#466d78}
+.section-kicker,.metric .good,.stepbadge{color:var(--teal)}
+.stage-link[aria-current="step"]{background:#e6f1ed;border-color:#cddfd8;color:#3c6f73}
+.stage-link[aria-current="step"] .stage-number{background:var(--teal);border-color:var(--teal)}
+.formula{background:#edf4f1;border-color:var(--teal)}
+.callout{background:#faf5ea;border-color:#e9dcc6;color:#695844}
+.callout strong{color:#64503a}
+.metric{background:#fcfdfb}.metric .val{color:#466f76}
+.metric.loss .val{color:#b27a7f}.big-number{color:#456f77}
+.tablewrap th{background:#edf4f1}
+.btn.secondary{background:#527078;border-color:#527078;color:white}
+.bar-track{background:#eaf1ee}
+.footer-note{color:#6c8189}
+</style>
+</head>
+<body>
+<a href="#mainContent" class="skip-link" id="skipLink">Skip to activity</a>
+<div class="topbar"><div class="topbar-inner"><div class="brand"><span class="brandmark" aria-hidden="true">∑</span><span id="brandLabel">MONTE CARLO / DECISION LAB</span></div><div class="top-right"><span class="top-chip" id="topChip">MONTE CARLO ONLY · NO MINITAB</span><div class="lang-switch" role="group" aria-label="Language / Idioma"><button type="button" id="chooseEs" lang="es" aria-pressed="false">Español</button><button type="button" id="chooseEn" lang="en" aria-pressed="true">English</button></div></div></div></div>
+<div class="container">
+<header class="hero"><div><div class="eyebrow" id="eyebrow">Individual learning activity · Decision-making lab</div><h1 id="heroTitle">Monte Carlo: From uncertainty<br>to a business decision.</h1><p id="heroLead"></p></div><div class="hero-figure"><b>60 min</b><span id="guidedSteps">8 guided steps</span><span id="months">10,000 simulated months</span></div></header>
+<div class="meta"><span class="pill" id="meta0"></span><span class="pill" id="meta1"></span><span class="pill" id="meta2"></span><span class="pill" id="meta3"></span></div>
+<div class="layout"><aside class="sidebar">
+ <div class="sidepanel navpanel"><span class="section-kicker" id="workflow"></span><h2 id="workflowHeading"></h2><div id="stageList" class="stage-list" role="navigation" aria-label="Activity steps"></div></div>
+ <div class="sidepanel"><span class="section-kicker" id="studentInfoHeading"></span><label for="studentName" id="nameLabel"></label><input id="studentName" autocomplete="name" maxlength="110"><label for="studentID" id="idLabel"></label><input id="studentID" maxlength="30"><label for="studentGroup" id="groupLabel"></label><input id="studentGroup" maxlength="30"><p class="aside-note" id="storageNote"></p></div>
+ <div class="sidepanel"><span class="section-kicker" id="simStatusHeading"></span><h2 id="sideStatus" aria-live="polite"></h2><p id="sideDetail"></p><button type="button" class="btn small" id="resetActivity"></button></div>
+</aside><main class="content" id="mainContent"><article class="panel mainpanel"><div class="headerline"><span class="stepbadge" id="stepBadge"></span><span class="minutes" id="timeLabel"></span></div><h2 id="stageTitle"></h2><p class="lead" id="stageLead"></p><div id="stageBody"></div><div class="actions"><button type="button" class="btn" id="prevBtn"></button><span class="smallprint" id="positionText"></span><div class="next"><button type="button" class="btn primary" id="nextBtn"></button></div></div></article><div class="footer-note" id="footerNote"></div></main></div></div>
+<footer class="author-credit" id="authorCredit" style="max-width:1290px;padding:16px 24px"><span><strong id="authorCaption">Simulator author</strong>: Dr. Boris C. Herbas Torrico</span><a href="mailto:boris.herbas@tec.mx">boris.herbas@tec.mx</a></footer><script>
+'use strict';
+const $=id=>document.getElementById(id);
+const ORIGINAL_STAGES=[
+ {title:'Base case',time:'0–6 min',lead:'Begin with the deterministic business model. What does one expected-profit number tell us—and what does it hide?'},
+ {title:'Model uncertainty',time:'6–13 min',lead:'Identify the uncertain inputs, their probability distributions, and the model assumptions.'},
+ {title:'Simulate 10,000 futures',time:'13–21 min',lead:'Generate reproducible random combinations and calculate monthly profit for every simulated future.'},
+ {title:'Measure profit and risk',time:'21–32 min',lead:'Interpret expected performance, downside outcomes, percentiles, and probability of hitting the profit target.'},
+ {title:'Analyze sensitivity',time:'32–40 min',lead:'Find which uncertain inputs are most strongly associated with simulated monthly profit.'},
+ {title:'Compare supplier strategies',time:'40–49 min',lead:'Compare the current supplier with a stable supplier using the same simulated market conditions.'},
+ {title:'Check convergence',time:'49–54 min',lead:'Compare results based on 100, 1,000, and 10,000 iterations to assess Monte Carlo sampling stability.'},
+ {title:'Decide & prepare your report',time:'54–60 min',lead:'Write a defensible recommendation, acknowledge a limitation, and export the evidence-based report for your learning platform.'}
+];
+const A={mu:3.458,sigma:0.1245,fix:120000};
+const B={mu:3.399,sigma:0.0666,fix:140000};
+const RUNS=10000, TARGET=100000;
+let active=0,sim=null,dirty=false,seed=2026,lang='en',wasRun=false;
+let answers={name:'',studentID:'',group:'',firstDecision:'',firstWhy:'',risk:'',sensitivity:'',choice:'',evidence:'',limitations:''};
+const number=x=>Number(x).toLocaleString(lang==='es'?'es-MX':'en-US',{maximumFractionDigits:0});
+const money=x=>'$'+number(Math.round(x));
+const pct=x=>(100*x).toLocaleString(lang==='es'?'es-MX':'en-US',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+const decimal=x=>Number(x).toLocaleString(lang==='es'?'es-MX':'en-US',{minimumFractionDigits:3,maximumFractionDigits:3});
+const safe=x=>String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function mulberry32(seed){let a=seed>>>0;return function(){a=(a+0x6D2B79F5)>>>0;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function normal01(rand){let u=0,v=0;while(u===0)u=rand();while(v===0)v=rand();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+function triangle(rand,a,m,b){let u=rand(),c=(m-a)/(b-a);return u<c?a+Math.sqrt(u*(b-a)*(m-a)):b-Math.sqrt((1-u)*(b-a)*(b-m))}
+function summarize(rows,key,n=rows.length){let vals=rows.slice(0,n).map(r=>r[key]);let sorted=vals.slice().sort((a,b)=>a-b);let s=0,ss=0,loss=0,hit=0;for(const x of vals){s+=x;ss+=x*x;if(x<0)loss++;if(x>=TARGET)hit++}const mean=s/n,variance=Math.max(0,ss/n-mean*mean);return{n,mean,sd:Math.sqrt(variance),median:quant(sorted,.5),p10:quant(sorted,.10),p90:quant(sorted,.90),min:sorted[0],max:sorted[n-1],loss:loss/n,target:hit/n}}
+function quant(sorted,p){let pos=(sorted.length-1)*p,i=Math.floor(pos);return sorted[i]+(sorted[Math.min(i+1,sorted.length-1)]-sorted[i])*(pos-i)}
+function ranks(arr){const indexed=arr.map((v,i)=>({v,i}));indexed.sort((a,b)=>a.v-b.v);const rank=new Float64Array(arr.length);for(let i=0;i<indexed.length;){let j=i+1;while(j<indexed.length&&indexed[j].v===indexed[i].v)j++;let v=(i+j+1)/2;for(let k=i;k<j;k++)rank[indexed[k].i]=v;i=j}return rank}
+function spear(x,y){let a=ranks(x),b=ranks(y),n=x.length,ma=(n+1)/2,mb=(n+1)/2,xy=0,xx=0,yy=0;for(let i=0;i<n;i++){let u=a[i]-ma,v=b[i]-mb;xy+=u*v;xx+=u*u;yy+=v*v}return xy/Math.sqrt(xx*yy)}
+function simulate(seed){const rand=mulberry32(seed),rows=[];for(let i=0;i<RUNS;i++){const d=triangle(rand,8000,10000,14000),price=50+3*normal01(rand),costA=Math.exp(A.mu+A.sigma*normal01(rand)),costB=Math.exp(B.mu+B.sigma*normal01(rand));rows.push({d,price,costA,costB,profitA:(price-costA)*d-A.fix,profitB:(price-costB)*d-B.fix})}
+ const sA=summarize(rows,'profitA'),sB=summarize(rows,'profitB');const rho=[{name:'Demand',key:'d',r:spear(rows.map(x=>x.d),rows.map(x=>x.profitA))},{name:'Selling price',key:'price',r:spear(rows.map(x=>x.price),rows.map(x=>x.profitA))},{name:'Variable cost',key:'costA',r:spear(rows.map(x=>x.costA),rows.map(x=>x.profitA))}].sort((x,y)=>Math.abs(y.r)-Math.abs(x.r));let better=0;for(const r of rows)if(r.profitB>r.profitA)better++;
+ return{seed,rows,A:sA,B:sB,rho,win:better/RUNS,convergence:[100,1000,10000].map(n=>({n,A:summarize(rows,'profitA',n),B:summarize(rows,'profitB',n)}))}}
+// Localized copy is deliberately separated from the simulation engine.
+// Students can change language without changing the random sample or their answers.
+const LOCALE = {
+ en: {
+  title:'Monte Carlo Decision Lab | 60-minute individual activity',
+  brand:'MONTE CARLO / DECISION LAB', chip:'MONTE CARLO ONLY · NO MINITAB',
+  skip:'Skip to activity', eyebrow:'Individual learning activity · Decision-making lab',
+  hero:'Monte Carlo: From uncertainty<br>to a business decision.',
+  heroLead:'Should a company launch a new product? Which supplier offers a better risk–return profile? Simulate possible monthly outcomes, compare the alternatives, and prepare your evidence-based recommendation for your course.',
+  stepsSmall:'8 guided steps',months:'10,000 simulated months',
+  meta:['✓ Works in your browser · offline','✓ No Minitab or Excel','✓ Reproducible seed: 2026','✓ Copy or download your report'],
+  workflow:'Activity route',workflowHeading:'Eight steps · one decision',
+  info:'Student details',name:'Full name',namePh:'Your full name',id:'Student ID',idPh:'e.g., A0…',group:'Group',groupPh:'e.g., 601',
+  privacy:'Written answers are saved only in this browser when local storage is available. Nothing is sent to a server. Changing language preserves your progress.',
+  statusHeading:'Simulation status',reset:'Reset student answers',
+  ready:'10,000 months simulated',need:'Simulation not yet run',readyInfo:'Seed {seed} · Both supplier strategies · Paired demand and price for a fair comparison.',needInfo:'Run the simulation in Step 3. The following steps will then show your numerical results.',
+  previous:'← Previous',next:'Next step →',done:'Activity complete',position:'{n} of 8',step:'STEP',
+  footer:'Monte Carlo · Model → Uncertainty → Simulate → Evaluate → Decide · Results depend on the assumptions.',
+  stages:[
+   ['Base case','0–6 min','Begin with the deterministic business model. What does a single expected-profit number reveal—and what does it hide?'],
+   ['Model uncertainty','6–13 min','Identify the uncertain inputs, their probability distributions, and the assumptions of the model.'],
+   ['Simulate 10,000 outcomes','13–21 min','Generate reproducible random inputs and calculate monthly profit in each simulated scenario.'],
+   ['Measure profit and risk','21–32 min','Interpret the profit distribution, percentiles, downside risk, and probability of reaching the target.'],
+   ['Analyze sensitivity','32–40 min','Identify which uncertain inputs are most strongly associated with simulated profit.'],
+   ['Compare suppliers','40–49 min','Compare the current supplier with a more stable supplier under identical market scenarios.'],
+   ['Check convergence','49–54 min','Compare the first 100, 1,000, and 10,000 iterations to examine simulation stability.'],
+   ['Decide & export your report','54–60 min','Form a defensible recommendation, acknowledge a model limitation, and export your full report to any learning platform.']
+  ],
+  w:['Model → Base case','Uncertainty → Inputs','Simulate → Monthly profit','Evaluate → Profit and risk','Evaluate → Main drivers','Alternatives → Risk and return','Validate → Convergence','Decide → Portable report'],
+  p0:{formula:'Monthly profit = (Selling price − Unit variable cost) × Demand − Fixed monthly cost',
+   th:['Base-case input','Assumed value'],cells:['Demand (most likely)','10,000 units','Selling price','$50 / unit','Variable cost','$32 / unit','Fixed monthly cost · supplier A','$120,000'],
+   calculation:'Deterministic calculation: ($50 − $32) × 10,000 − $120,000',base:'Monthly profit in the deterministic base case. This is a point estimate, not a risk measure.',
+   heading:'Before the simulation · your initial decision',intro:'Based only on the $60,000 monthly profit, would you approve the launch?',
+   decision:'Choose your initial decision',why:'Explain your reasoning in one sentence.',whyPh:'What is missing when you use only one profit estimate?'},
+  initial:['Choose one…','Approve now','Request a risk analysis','Do not approve'],
+  p1:{th:['Uncertain input','Distribution','Parameters','Business interpretation'],rows:[
+    ['Demand','Triangular','Minimum 8,000 · Mode 10,000 · Maximum 14,000','Demand has a lower bound, most likely value, and upper bound'],
+    ['Selling price','Normal','Mean $50 · SD $3','Unit price fluctuates around $50'],
+    ['Unit variable cost A','Lognormal','Mean ≈ $32 · SD ≈ $4','Cost is positive and may sometimes be unusually high'],
+    ['Fixed cost A','Deterministic','$120,000 / month','Known monthly commitment']],
+   mode:'Note: mode ≠ mean.',modeText:'The most likely demand is 10,000, but its expected value is (8,000 + 10,000 + 14,000)/3 = <b>10,666.7 units</b>. That helps explain why simulated average profit may differ from $60,000.',
+   logTitle:'Lognormal parameters · Supplier A',logText:'On the natural-log scale: μ = 3.458 and σ = 0.1245. Unit cost is generated as exp(μ + σZ), where Z is a standard-normal draw.',
+   assumptions:'Model assumptions',assumptionsText:'Demand, price, and supplier costs are generated independently. The model omits any relationship between price and demand. Each simulation represents a possible outcome for one month.',
+   caution:'The normal distribution is mathematically unbounded. A nonpositive price is extraordinarily unlikely with these parameters, but a real study should still assess that assumption.'},
+  p2:{seed:'Random seed',run:'▶ Run 10,000 simulations',restore:'Restore seed 2026',
+   seedNote:'The same seed and model produce the same results in this simulator. Another program may generate different random values.',
+   ready:'Results are ready. You may rerun the simulation with the same seed.',missing:'No simulation yet. Click the button above.',
+   formula:'For each simulated month: Profit A = (Price − Cost A) × Demand − 120,000',
+   five:'Five possible months · first five simulation rows',fiveNote:'Inputs are displayed rounded, but profit is computed from unrounded values. Fixed cost stays constant.',
+   th:['Simulation','Demand','Unit price','Unit cost A','Profit A'],
+   size:'Sample size',sizeValue:'10,000 iterations',sizeText:'10,000 possible monthly outcomes',
+   reproducible:'Reproducibility',seedValue:'Seed',seedText:'Change the seed to examine simulation variability, then rerun.',
+   checkpoint:'Conceptual checkpoint:',checkpointText:'These are not forecasts for 10,000 successive calendar months. They are 10,000 possible outcomes of the <em>same monthly business model</em>.'},
+  m:{mean:'Expected profit · mean',meanNote:'Average simulated monthly profit',sd:'Standard deviation',sdNote:'Variability across outcomes',loss:'Probability of loss',lossNote:'P(profit < $0)',p10:'P10 · downside',p10Note:'10% at or below this level',p50:'P50 · median',p50Note:'50% at or below this level',p90:'P90 · upside',p90Note:'90% at or below this level',target:'Probability of meeting the target',targetNote:'P(profit ≥ $100,000)',extremes:'Observed extremes',extremesNote:'Smallest and largest of the 10,000 simulated results, not theoretical bounds.'},
+  p3:{title:'Profit distribution · Supplier A',pctTitle:'How to read percentiles:',pctNote:'Approximately 10% of simulated profits fall at or below P10. Approximately 90% fall at or below P90, so only about 10% exceed P90. <b>These probabilities depend on the model assumptions.</b>',
+   question:'Interpretation (1–2 sentences)',ph:'What do the distribution, P10, and probability of loss add to the $60,000 base case?'},
+  p4:{intro:'Spearman rank correlations between each uncertain input and <b>Supplier A profit</b>. Greater absolute values mean stronger monotonic associations <b>within this model</b>.',
+   strongest:'Strongest absolute association',explanation:'This is an association in the simulated outcomes—not a causal effect or proof that changing the input is feasible.',
+   question:'Management interpretation (1–2 sentences)',ph:'What is the strongest profit driver in this simulation? What action or additional analysis would you prioritize?',
+   caution:'Statistical caution:',cautionText:'Spearman correlations provide a useful sensitivity screen. Their size depends partly on the ranges and dependence structure of the inputs. Correlation does not prove causality.'},
+  variable:{d:'Demand',price:'Selling price',costA:'Unit variable cost'},
+  p5:{th:['Assumption','Supplier A · current','Supplier B · stable'],
+   cost:'Unit variable cost',ca:'Lognormal, mean ≈ $32; SD ≈ $4',cb:'Lognormal, mean ≈ $30; SD ≈ $2',pars:'Lognormal parameters (log scale)',fixed:'Fixed monthly cost',
+   market:'Demand and selling price',marketShared:'Both strategies use the same simulated demand and selling price in every paired scenario.',
+   formula:'Profit B = (Price − Cost B) × Demand − 140,000',
+   thResults:['Decision metric','Supplier A','Supplier B'],
+   resultLabels:['Mean profit','Profit standard deviation','P10','P50','P90','P(loss)','P(profit ≥ $100,000)'],
+   diff:'Difference in mean profit · B − A',diffNote:'A positive difference favors B on average simulated profit.',
+   win:'Probability B outperforms A',winNote:'Proportion of paired scenarios in which B has greater profit than A.',
+   note:'Fair comparison:',noteText:'Both suppliers face the same simulated demand and selling price in each scenario. Their unit costs are generated separately. Similar average profits do not imply equal downside risk or upside potential.'},
+  p6:{intro:'Compare the first 100, first 1,000, and all 10,000 scenarios from the <b>same simulation</b>. These nested samples help you assess Monte Carlo sampling variability.',
+   th:['Iterations','Mean A','P(loss) A','Mean B','P(loss) B'],
+   look:'What to observe',lookText:'How much do estimates change as the sample grows? Compare the loss probability at 100 and 10,000 iterations. More simulations reduce sampling noise but do not repair incorrect assumptions.',
+   note:'Important distinction:',noteText:'Convergence describes the stability of numerical simulation estimates, not the validity of the business model.'},
+  p7:{introLabel:'Deliverable:',intro:'A brief, evidence-based management recommendation. Numeric results enter your report automatically, but <b>you must write the interpretation and decision yourself</b>. Use only this simulator; do not submit screenshots or results copied from the instructor example.',
+   heading:'Your managerial decision',choiceLabel:'Which supplier strategy do you recommend?',
+   evidence:'Justify your choice with at least TWO simulation metrics (2–3 sentences).',evidencePh:'Compare expected profit with P(loss), P10, or target attainment. Explain an important trade-off.',
+   limits:'Identify ONE meaningful model assumption or limitation (1–2 sentences).',limitsPh:'For example: independent inputs, the distributions used, or the missing price–demand relationship.',
+   report:'Report ready to reuse anywhere',complete:'✓ All required fields are complete. You may copy the report.',
+   incomplete:'Complete the simulation and the remaining {n} required fields before submitting.',
+   copy:'⧉ Copy report',download:'↓ Download .txt backup',
+   copyNote:'Copy the report to your document or learning platform, or download the .txt file and attach it according to your instructor’s directions.',
+   reportNote:'Your report includes student details, the model, risk measures, sensitivity, convergence, and your own decision. Do not submit a report containing “[COMPLETE THIS FIELD]”.',
+   reportAria:'Portable report for academic submission'},
+  needed:'Simulation required.',neededText:'Go to Step 3, run 10,000 iterations, and return here. Your written answers will be preserved.',
+  hist:{a:'Supplier A: current supplier',b:'Supplier B: stable supplier',bars:'Bars: percentage of simulated months',breakEven:'Break-even',target:'$100k target',y:'Share of months',x:'Monthly profit ($)',ariaA:'Histogram of simulated monthly profit for supplier A',ariaBoth:'Overlaid histogram of simulated monthly profit for suppliers A and B'},
+  seedInvalid:'Enter a whole-number seed from 1 to 4,294,967,295.',seedChanged:'Seed changed. Rerun the simulation to update results.',calculating:'Calculating 10,000 outcomes and Spearman correlations…',
+  success:'Done: 10,000 outcomes calculated with seed {seed}. Continue to Steps 4–8.',simError:'Calculation failed. Reload the page and try again.',
+  copyIncomplete:'Run the simulation and complete all required fields before copying. You can still download a draft.',
+  copySuccess:'Report copied. Paste it into your document or learning platform, review it, and submit.',
+  copyFallback:'Automatic copying was blocked. Select the report, press Ctrl+C (or Cmd+C), and paste it into your document or platform.',
+  resetConfirm:'Clear student details and written responses? You will be able to rerun the simulation.',
+  choices:['Choose one…','A · Current supplier','B · Stable supplier','Delay decision / request more evidence'],
+  report:{missing:'[COMPLETE THIS FIELD]',noSim:'[RUN THE SIMULATION TO COMPLETE THIS SECTION]',
+   title:'MONTE CARLO · INDIVIDUAL LEARNING ACTIVITY',subtitle:'Monte Carlo Decision Lab · 60-minute individual activity',student:'Student',studentID:'Student ID',group:'Group',
+   s1:'1. BUSINESS QUESTION AND BASE CASE',decision:'Decision: Launch the product? Which supplier to choose?',formula:'Profit = (selling price - unit variable cost) × demand - fixed monthly cost.',base:'Deterministic base-case profit = $60,000.',initial:'Initial decision',reason:'Initial reasoning',
+   s2:'2. UNCERTAIN INPUTS AND MODEL',demand:'Demand ~ Triangular(8,000, 10,000, 14,000): min, mode, max.',demandMean:'Mean demand = 10,666.7 units; the mode is 10,000.',price:'Price ~ Normal(mean $50; SD $3).',costA:'Supplier A cost ~ Lognormal(log-μ 3.458; log-σ 0.1245); fixed cost $120,000.',costB:'Supplier B cost ~ Lognormal(log-μ 3.399; log-σ 0.0666); fixed cost $140,000.',indep:'Inputs assumed independent; paired scenarios share demand and price.',runs:'Iterations',seed:'Random seed',
+   s3:'3. SIMULATED PROFIT AND RISK',metric:'Metric',sa:'Supplier A',sb:'Supplier B',metrics:['Mean monthly profit','Profit standard deviation','P10','P50','P90','Observed minimum','Observed maximum','Probability of loss','P(profit ≥ $100,000)'],win:'P(Profit B > Profit A)',diff:'Difference in expected profit (B − A)',
+   s4:'4. INTERPRETATION OF RISK',s5:'5. SENSITIVITY · SPEARMAN CORRELATIONS',rho:'ρ',sensitivity:'Interpretation of sensitivity',
+   s6:'6. SIMULATION CONVERGENCE',iterations:'iterations',meanA:'mean A',lossA:'loss A',meanB:'mean B',lossB:'loss B',
+   s7:'7. EVIDENCE → INTERPRETATION → DECISION',strategy:'Recommended strategy',evidence:'Evidence-based justification',limitation:'Assumption or limitation',
+   footer:'All estimates are conditional on the stated model assumptions.','tool':'Completed using only the Monte Carlo Decision Lab simulator; no Minitab or Excel.'}
+ },
+ es: {
+  title:'Laboratorio de decisiones Monte Carlo | Actividad individual de 60 minutos',
+  brand:'MONTE CARLO / LABORATORIO DE DECISIONES',chip:'SOLO MONTE CARLO · SIN MINITAB',
+  skip:'Ir a la actividad',eyebrow:'Actividad individual de aprendizaje · Toma de decisiones',
+  hero:'Monte Carlo: De la incertidumbre<br>a una decisión empresarial.',
+  heroLead:'¿Conviene lanzar un producto nuevo? ¿Qué proveedor ofrece una mejor relación entre riesgo y rendimiento? Simula posibles resultados mensuales, compara ambas alternativas y prepara una recomendación sustentada en evidencia.',
+  stepsSmall:'8 pasos guiados',months:'10,000 meses simulados',
+  meta:['✓ Funciona en el navegador · sin conexión','✓ No requiere Minitab ni Excel','✓ Semilla reproducible: 2026','✓ Copia o descarga tu reporte'],
+  workflow:'Ruta de la actividad',workflowHeading:'Ocho pasos · una decisión',
+  info:'Datos del estudiante',name:'Nombre completo',namePh:'Tu nombre completo',id:'Matrícula',idPh:'p. ej., A0…',group:'Grupo',groupPh:'p. ej., 601',
+  privacy:'Tus respuestas se guardan solamente en este navegador, si permite el almacenamiento local. No se envían a ningún servidor. Puedes cambiar de idioma sin perder tu avance.',
+  statusHeading:'Estado de la simulación',reset:'Borrar mis respuestas',
+  ready:'10,000 meses simulados',need:'Simulación pendiente',readyInfo:'Semilla {seed} · Dos proveedores · Misma demanda y precio para comparar las alternativas.',needInfo:'Ejecuta la simulación en el paso 3. Los pasos siguientes mostrarán automáticamente tus resultados.',
+  previous:'← Anterior',next:'Siguiente paso →',done:'Actividad finalizada',position:'{n} de 8',step:'PASO',
+  footer:'Monte Carlo · Modelar → Incorporar incertidumbre → Simular → Evaluar → Decidir · Los resultados dependen de los supuestos.',
+  stages:[
+   ['Caso base','0–6 min','Comienza con un modelo determinista. ¿Qué revela una sola cifra de utilidad esperada y qué información deja fuera?'],
+   ['Representar la incertidumbre','6–13 min','Identifica las variables inciertas, sus distribuciones de probabilidad y los supuestos del modelo.'],
+   ['Simular 10,000 escenarios','13–21 min','Genera valores aleatorios reproducibles y calcula la utilidad mensual de cada escenario.'],
+   ['Medir utilidad y riesgo','21–32 min','Interpreta la distribución de utilidades, los percentiles, el riesgo de pérdida y el cumplimiento de la meta.'],
+   ['Analizar la sensibilidad','32–40 min','Identifica qué variables inciertas se relacionan más con la utilidad simulada.'],
+   ['Comparar proveedores','40–49 min','Compara al proveedor actual con uno más estable bajo los mismos escenarios de mercado.'],
+   ['Comprobar la convergencia','49–54 min','Compara las primeras 100, 1,000 y 10,000 iteraciones para evaluar la estabilidad de la simulación.'],
+   ['Decidir y preparar el reporte','54–60 min','Formula una recomendación, reconoce una limitación del modelo y exporta tu reporte completo a la plataforma que corresponda.']
+  ],
+  w:['Modelar → Caso base','Incertidumbre → Variables','Simular → Utilidad mensual','Evaluar → Utilidad y riesgo','Evaluar → Factores influyentes','Alternativas → Riesgo y rendimiento','Validar → Convergencia','Decidir → Reporte reutilizable'],
+  p0:{formula:'Utilidad mensual = (Precio de venta − Costo variable unitario) × Demanda − Costo fijo mensual',
+   th:['Variable del caso base','Valor supuesto'],cells:['Demanda (más probable)','10,000 unidades','Precio de venta','$50 por unidad','Costo variable','$32 por unidad','Costo fijo mensual · proveedor A','$120,000'],
+   calculation:'Cálculo determinista: ($50 − $32) × 10,000 − $120,000',base:'Utilidad mensual del caso base determinista. Es una estimación puntual, no una medida del riesgo.',
+   heading:'Antes de simular · tu decisión inicial',intro:'¿Aprobarías el lanzamiento basándote únicamente en una utilidad mensual de $60,000?',
+   decision:'Selecciona tu decisión inicial',why:'Justifica tu respuesta en una oración.',whyPh:'¿Qué información falta cuando solo se utiliza una estimación de utilidad?'},
+  initial:['Selecciona una opción…','Aprobar de inmediato','Solicitar un análisis de riesgo','No aprobar'],
+  p1:{th:['Variable incierta','Distribución','Parámetros','Interpretación empresarial'],rows:[
+    ['Demanda','Triangular','Mínimo 8,000 · Moda 10,000 · Máximo 14,000','La demanda tiene límites y un valor más probable'],
+    ['Precio de venta','Normal','Media $50 · DE $3','El precio unitario fluctúa alrededor de $50'],
+    ['Costo variable unitario A','Lognormal','Media ≈ $32 · DE ≈ $4','El costo es positivo y puede registrar valores elevados'],
+    ['Costo fijo A','Determinista','$120,000 al mes','Compromiso mensual conocido']],
+   mode:'Importante: moda ≠ media.',modeText:'La demanda más probable es 10,000, pero su valor esperado es (8,000 + 10,000 + 14,000)/3 = <b>10,666.7 unidades</b>. Por eso, la utilidad media simulada puede diferir de $60,000.',
+   logTitle:'Parámetros lognormales · Proveedor A',logText:'En escala logarítmica natural: μ = 3.458 y σ = 0.1245. El costo unitario se genera mediante exp(μ + σZ), donde Z es un valor de una normal estándar.',
+   assumptions:'Supuestos del modelo',assumptionsText:'La demanda, el precio y los costos de los proveedores se generan de forma independiente. El modelo no incluye una relación entre precio y demanda. Cada simulación representa un posible resultado mensual.',
+   caution:'La distribución normal no tiene límites matemáticos. Con estos parámetros, un precio no positivo es extremadamente improbable; aun así, ese supuesto debe revisarse en un proyecto real.'},
+  p2:{seed:'Semilla aleatoria',run:'▶ Ejecutar 10,000 simulaciones',restore:'Restablecer semilla 2026',
+   seedNote:'Con la misma semilla y los mismos supuestos obtendrás idénticos resultados en este simulador. Otro programa puede producir números aleatorios distintos.',
+   ready:'Los resultados están listos. Puedes repetir la simulación con la misma semilla.',missing:'Aún no has ejecutado la simulación. Haz clic en el botón anterior.',
+   formula:'En cada escenario: Utilidad A = (Precio − Costo A) × Demanda − 120,000',
+   five:'Cinco escenarios posibles · primeras cinco filas',fiveNote:'Las variables se muestran redondeadas, pero la utilidad se calcula con los valores completos. El costo fijo no cambia.',
+   th:['Escenario','Demanda','Precio unitario','Costo unitario A','Utilidad A'],
+   size:'Tamaño de la simulación',sizeValue:'10,000 iteraciones',sizeText:'10,000 posibles resultados mensuales',
+   reproducible:'Reproducibilidad',seedValue:'Semilla',seedText:'Cambia la semilla para explorar la variación por muestreo y vuelve a ejecutar.',
+   checkpoint:'Verificación conceptual:',checkpointText:'No estamos pronosticando 10,000 meses consecutivos del calendario. Generamos 10,000 resultados posibles del <em>mismo modelo mensual de negocio</em>.'},
+  m:{mean:'Utilidad esperada · media',meanNote:'Promedio de las utilidades simuladas',sd:'Desviación estándar',sdNote:'Variabilidad de los resultados',loss:'Probabilidad de pérdida',lossNote:'P(utilidad < $0)',p10:'P10 · riesgo a la baja',p10Note:'10% de resultados son menores o iguales',p50:'P50 · mediana',p50Note:'50% de resultados son menores o iguales',p90:'P90 · resultado alto',p90Note:'90% de resultados son menores o iguales',target:'Probabilidad de alcanzar la meta',targetNote:'P(utilidad ≥ $100,000)',extremes:'Valores extremos observados',extremesNote:'Mínimo y máximo entre 10,000 resultados simulados; no son límites teóricos.'},
+  p3:{title:'Distribución de utilidades · Proveedor A',pctTitle:'Cómo interpretar los percentiles:',pctNote:'Aproximadamente el 10% de las utilidades simuladas es menor o igual que P10. Alrededor del 90% es menor o igual que P90; por tanto, solo cerca del 10% supera P90. <b>Estas probabilidades dependen de los supuestos del modelo.</b>',
+   question:'Tu interpretación (1–2 oraciones)',ph:'¿Qué aportan la distribución, P10 y la probabilidad de pérdida frente al caso base de $60,000?'},
+  p4:{intro:'Correlaciones por rangos de Spearman entre cada variable incierta y la <b>utilidad del proveedor A</b>. Un mayor valor absoluto indica una asociación monótona más fuerte <b>dentro de este modelo</b>.',
+   strongest:'Asociación de mayor magnitud',explanation:'Es una asociación observada en los escenarios simulados, no una relación causal ni una prueba de que sea posible modificar esa variable.',
+   question:'Interpretación gerencial (1–2 oraciones)',ph:'¿Qué variable está más asociada con la utilidad? ¿Qué acción o análisis adicional priorizarías?',
+   caution:'Precaución estadística:',cautionText:'Las correlaciones de Spearman permiten un análisis inicial de sensibilidad. Su magnitud depende también de los rangos y las relaciones entre las variables. Correlación no implica causalidad.'},
+  variable:{d:'Demanda',price:'Precio de venta',costA:'Costo variable unitario'},
+  p5:{th:['Supuesto','Proveedor A · actual','Proveedor B · estable'],
+   cost:'Costo variable unitario',ca:'Lognormal, media ≈ $32; DE ≈ $4',cb:'Lognormal, media ≈ $30; DE ≈ $2',pars:'Parámetros lognormales (escala log)',fixed:'Costo fijo mensual',
+   market:'Demanda y precio de venta',marketShared:'Ambas estrategias usan la misma demanda y el mismo precio simulados en cada escenario pareado.',
+   formula:'Utilidad B = (Precio − Costo B) × Demanda − 140,000',
+   thResults:['Indicador para decidir','Proveedor A','Proveedor B'],
+   resultLabels:['Utilidad media','Desviación estándar de la utilidad','P10','P50','P90','P(pérdida)','P(utilidad ≥ $100,000)'],
+   diff:'Diferencia de utilidad media · B − A',diffNote:'Un valor positivo favorece a B en utilidad promedio simulada.',
+   win:'Probabilidad de que B supere a A',winNote:'Proporción de escenarios pareados en los que B obtiene mayor utilidad que A.',
+   note:'Comparación justa:',noteText:'Ambos proveedores enfrentan la misma demanda y el mismo precio en cada escenario. Los costos unitarios se generan por separado. Una utilidad promedio similar no implica igual riesgo de pérdida ni igual potencial de ganancia.'},
+  p6:{intro:'Compara los primeros 100, los primeros 1,000 y los 10,000 escenarios de <b>una misma simulación</b>. Estas muestras anidadas ayudan a evaluar la variación debida al muestreo Monte Carlo.',
+   th:['Iteraciones','Media A','P(pérdida) A','Media B','P(pérdida) B'],
+   look:'Qué debes observar',lookText:'¿Cuánto cambian las estimaciones al aumentar el número de escenarios? Compara la probabilidad de pérdida con 100 y 10,000 iteraciones. Simular más reduce el error de muestreo, pero no corrige supuestos incorrectos.',
+   note:'Distinción importante:',noteText:'La convergencia describe la estabilidad de las estimaciones numéricas, no demuestra que el modelo de negocio sea válido.'},
+  p7:{introLabel:'Entregable:',intro:'Una recomendación gerencial breve sustentada en evidencia. Los resultados numéricos se integran automáticamente en tu reporte, pero <b>tú debes redactar la interpretación y la decisión</b>. Usa solamente este simulador; no entregues capturas de pantalla ni resultados copiados del ejemplo del profesor.',
+   heading:'Tu decisión gerencial',choiceLabel:'¿Qué estrategia de proveedor recomiendas?',
+   evidence:'Justifica tu elección con al menos DOS indicadores de la simulación (2–3 oraciones).',evidencePh:'Compara la utilidad esperada con P(pérdida), P10 o el cumplimiento de la meta. Explica alguna compensación entre riesgo y rendimiento.',
+   limits:'Identifica UN supuesto o limitación importante del modelo (1–2 oraciones).',limitsPh:'Por ejemplo: independencia de variables, distribuciones elegidas o relación omitida entre precio y demanda.',
+   report:'Reporte listo para cualquier plataforma',complete:'✓ Completaste todos los campos obligatorios. Ya puedes copiar tu reporte.',
+   incomplete:'Ejecuta la simulación y completa los {n} campos obligatorios pendientes antes de entregar.',
+   copy:'⧉ Copiar reporte',download:'↓ Descargar respaldo .txt',
+   copyNote:'Copia el reporte en tu documento o plataforma educativa, o descarga el archivo .txt y entrégalo según las indicaciones del docente.',
+   reportNote:'El reporte incluye tus datos, el modelo, indicadores de riesgo, sensibilidad, convergencia y tu decisión. No entregues reportes que contengan «[COMPLETAR ESTE CAMPO]».',
+   reportAria:'Reporte reutilizable para entrega académica'},
+  needed:'Primero ejecuta la simulación.',neededText:'Ve al paso 3, ejecuta 10,000 iteraciones y regresa aquí. Tus respuestas escritas se conservarán.',
+  hist:{a:'Proveedor A: actual',b:'Proveedor B: estable',bars:'Barras: porcentaje de meses simulados',breakEven:'Punto de equilibrio',target:'Meta: $100 mil',y:'Porcentaje de meses',x:'Utilidad mensual ($)',ariaA:'Histograma de la utilidad mensual simulada del proveedor A',ariaBoth:'Histogramas superpuestos de utilidad mensual simulada de los proveedores A y B'},
+  seedInvalid:'Ingresa una semilla entera entre 1 y 4,294,967,295.',seedChanged:'Cambió la semilla. Ejecuta la simulación para actualizar los resultados.',calculating:'Calculando 10,000 escenarios y las correlaciones de Spearman…',
+  success:'Listo: se calcularon 10,000 escenarios con la semilla {seed}. Continúa con los pasos 4 a 8.',simError:'Ocurrió un error de cálculo. Recarga la página e inténtalo de nuevo.',
+  copyIncomplete:'Ejecuta la simulación y completa todos los campos obligatorios antes de copiar el reporte. Puedes descargar un borrador.',
+  copySuccess:'Reporte copiado. Pégalo en tu documento o plataforma educativa, revísalo y entrégalo.',
+  copyFallback:'El navegador bloqueó la copia automática. Selecciona el texto, usa Ctrl+C (o Cmd+C) y pégalo en tu documento o plataforma.',
+  resetConfirm:'¿Quieres borrar los datos del estudiante y las respuestas escritas? Podrás volver a ejecutar la simulación.',
+  choices:['Selecciona una opción…','A · Proveedor actual','B · Proveedor estable','Posponer la decisión / solicitar más información'],
+  report:{missing:'[COMPLETAR ESTE CAMPO]',noSim:'[EJECUTA LA SIMULACIÓN PARA COMPLETAR ESTA SECCIÓN]',
+   title:'MONTE CARLO · ACTIVIDAD INDIVIDUAL DE APRENDIZAJE',subtitle:'Laboratorio de decisiones con Monte Carlo · Actividad de 60 minutos',student:'Estudiante',studentID:'Matrícula',group:'Grupo',
+   s1:'1. PREGUNTA EMPRESARIAL Y CASO BASE',decision:'Decisión: ¿Lanzar el producto? ¿Qué proveedor elegir?',formula:'Utilidad = (precio - costo variable unitario) × demanda - costo fijo mensual.',base:'Utilidad determinista del caso base = $60,000.',initial:'Decisión inicial',reason:'Justificación inicial',
+   s2:'2. VARIABLES INCIERTAS Y MODELO',demand:'Demanda ~ Triangular(8,000, 10,000, 14,000): mínimo, moda, máximo.',demandMean:'Demanda media = 10,666.7 unidades; la moda es 10,000.',price:'Precio ~ Normal(media $50; DE $3).',costA:'Costo proveedor A ~ Lognormal(log-μ 3.458; log-σ 0.1245); costo fijo $120,000.',costB:'Costo proveedor B ~ Lognormal(log-μ 3.399; log-σ 0.0666); costo fijo $140,000.',indep:'Se asume independencia entre variables; los escenarios pareados comparten demanda y precio.',runs:'Iteraciones',seed:'Semilla aleatoria',
+   s3:'3. UTILIDAD SIMULADA Y RIESGO',metric:'Indicador',sa:'Proveedor A',sb:'Proveedor B',metrics:['Utilidad mensual media','Desviación estándar','P10','P50','P90','Mínimo observado','Máximo observado','Probabilidad de pérdida','P(utilidad ≥ $100,000)'],win:'P(Utilidad B > Utilidad A)',diff:'Diferencia de utilidad esperada (B − A)',
+   s4:'4. INTERPRETACIÓN DEL RIESGO',s5:'5. SENSIBILIDAD · CORRELACIONES DE SPEARMAN',rho:'ρ',sensitivity:'Interpretación de sensibilidad',
+   s6:'6. CONVERGENCIA DE LA SIMULACIÓN',iterations:'iteraciones',meanA:'media A',lossA:'pérdida A',meanB:'media B',lossB:'pérdida B',
+   s7:'7. EVIDENCIA → INTERPRETACIÓN → DECISIÓN',strategy:'Estrategia recomendada',evidence:'Justificación basada en evidencia',limitation:'Supuesto o limitación',
+   footer:'Todas las estimaciones dependen de los supuestos del modelo.','tool':'Actividad realizada únicamente con el simulador Monte Carlo Decision Lab; sin Minitab ni Excel.'}
+ }
+};
+const optInitial=['','Approve now','Need a risk analysis','Do not approve'];
+const optChoice=['','A · Current supplier','B · Stable supplier','Delay decision / request more evidence'];
+const T=()=>LOCALE[lang];
+const tx=(s,vals={})=>String(s).replace(/\{(\w+)\}/g,(all,k)=>(k in vals)?vals[k]:all);
+const param=(key,value)=>`${key}: ${value}`;
+const ths=(values,ns=[])=>values.map((v,i)=>`<th${ns.includes(i)?' class="num"':''}>${v}</th>`).join('');
+const cell=(v,cls='')=>`<td${cls?' class="'+cls+'"':''}>${v}</td>`;
+const row=(values,numeric=[])=>`<tr>${values.map((v,i)=>cell(v,numeric.includes(i)?'num':'')).join('')}</tr>`;
+const tbl=(headers,body,numeric=[])=>`<div class="tablewrap"><table><thead><tr>${ths(headers,numeric)}</tr></thead><tbody>${body}</tbody></table></div>`;
+const callout=(lead,body)=>`<div class="callout"><strong>${lead}</strong> ${body}</div>`;
+const card=(title,body)=>`<div class="mini-card"><h3>${title}</h3>${body}</div>`;
+const variableLabel=(key)=>T().variable[key];
+const optionList=(options,values,selected)=>options.map((t,i)=>`<option value="${safe(values[i])}" ${selected===values[i]?'selected':''}>${safe(t)}</option>`).join('');
+const field=(id,label,placeholder,rows=3)=>`<div class="prompt entry"><label for="${id}">${label}</label><textarea id="${id}" rows="${rows}" placeholder="${safe(placeholder)}">${safe(answers[id]||'')}</textarea></div>`;
+const empty=()=>callout(T().needed,T().neededText);
+const required=['name','studentID','group','firstDecision','firstWhy','risk','sensitivity','choice','evidence','limitations'];
+function restore(){
+ try {const raw=localStorage.getItem('portable-mc-decision-lab-2026-v2');
+  if(raw){const x=JSON.parse(raw);if(x.answers&&typeof x.answers==='object')for(const k in answers)if(typeof x.answers[k]==='string')answers[k]=x.answers[k];
+   if(Number.isInteger(x.seed)&&x.seed>=1&&x.seed<=4294967295)seed=x.seed;
+   if(Number.isInteger(x.active)&&x.active>=0&&x.active<8)active=x.active;
+   if(x.lang==='es'||x.lang==='en')lang=x.lang;
+   else lang=(navigator.language||'en').toLowerCase().startsWith('es')?'es':'en';
+   if(x.wasRun===true){wasRun=true;sim=simulate(seed)}}
+  else lang=(navigator.language||'en').toLowerCase().startsWith('es')?'es':'en';
+ }catch(e){lang=(navigator.language||'en').toLowerCase().startsWith('es')?'es':'en'}
+}
+function save(){try{localStorage.setItem('portable-mc-decision-lab-2026-v2',JSON.stringify({answers,seed,active,lang,wasRun}))}catch(e){}}
+function language(next){if(next===lang)return;lang=next;save();render();}
+function translateShell(){const t=T();document.documentElement.lang=lang;document.title=t.title;
+ const ids={skipLink:t.skip,brandLabel:t.brand,topChip:t.chip,eyebrow:t.eyebrow,heroLead:t.heroLead,guidedSteps:t.stepsSmall,months:t.months,
+ workflow:t.workflow,workflowHeading:t.workflowHeading,studentInfoHeading:t.info,nameLabel:t.name,idLabel:t.id,groupLabel:t.group,storageNote:t.privacy,
+ simStatusHeading:t.statusHeading,resetActivity:t.reset,prevBtn:t.previous,footerNote:t.footer};
+ for(const [id,text] of Object.entries(ids))$(id).textContent=text;
+ $('heroTitle').innerHTML=t.hero;
+ t.meta.forEach((txt,i)=>$('meta'+i).textContent=txt);
+ $('studentName').placeholder=t.namePh;$('studentID').placeholder=t.idPh;$('studentGroup').placeholder=t.groupPh;
+ $('stageList').setAttribute('aria-label',t.workflow);
+ $('chooseEs').setAttribute('aria-pressed',String(lang==='es'));
+ $('chooseEn').setAttribute('aria-pressed',String(lang==='en'));
+}
+function status(){const t=T();$('sideStatus').innerHTML=sim&&!dirty?`<span class="status-dot ready"></span>${t.ready}`:`<span class="status-dot"></span>${t.need}`;
+ $('sideDetail').textContent=sim&&!dirty?tx(t.readyInfo,{seed}):t.needInfo;}
+function buildNav(){const el=$('stageList');el.innerHTML=T().stages.map(([title,time],i)=>`<button type="button" class="stage-link" data-step="${i}" ${i===active?'aria-current="step"':''}><span class="stage-number">${i+1}</span><span>${safe(title)}</span><small>${safe(time)}</small></button>`).join('');el.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>go(Number(b.dataset.step))))}
+function go(n){active=Math.max(0,Math.min(7,n));save();render();window.scrollTo({top:0,behavior:'smooth'})}
+function metrics(x){const t=T().m;const m=(label,value,note,cls='')=>`<div class="metric ${cls}"><span class="lbl">${label}</span><span class="val">${value}</span><span class="sub">${note}</span></div>`;
+ return `<div class="metric-grid">${m(t.mean,money(x.mean),t.meanNote,'good')}${m(t.sd,money(x.sd),t.sdNote)}${m(t.loss,pct(x.loss),t.lossNote,'loss')}${m(t.p10,money(x.p10),t.p10Note)}${m(t.p50,money(x.median),t.p50Note)}${m(t.p90,money(x.p90),t.p90Note)}</div><div class="two">${card(t.target,`<div class="subvalue">${pct(x.target)}</div><p>${t.targetNote}</p>`)}${card(t.extremes,`<div class="subvalue" style="font-size:18px">${money(x.min)} – ${money(x.max)}</div><p>${t.extremesNote}</p>`)}</div>`;
+}
+function shortMoney(x){const n=Math.round(x/1000);return n<0?'−$'+Math.abs(n)+'k':'$'+n+'k'}
+function makeHist(mode){
+ const t=T().hist,rows=sim.rows,a=rows.map(x=>x.profitA),b=mode==='both'?rows.map(x=>x.profitB):[];
+ const mn=Math.min(...a,...b),mx=Math.max(...a,...b),bins=30,dx=(mx-mn)/bins;
+ const ca=Array(bins).fill(0),cb=Array(bins).fill(0);
+ for(const x of a)ca[Math.max(0,Math.min(bins-1,Math.floor((x-mn)/dx)))]++;
+ for(const x of b)cb[Math.max(0,Math.min(bins-1,Math.floor((x-mn)/dx)))]++;
+ const top=Math.max(...ca,...cb)/RUNS*100*1.12,X=72,Y=245,W=800,H=210,bw=W/bins;
+ const parts=[];
+ for(let k=0;k<=4;k++){const v=top*k/4,y=Y-H*k/4;parts.push(`<line x1="${X}" x2="${X+W}" y1="${y}" y2="${y}" stroke="#e0e9e9"/><text x="${X-10}" y="${y+4}" font-size="11" text-anchor="end" fill="#607782">${v.toFixed(1)}%</text>`)}
+ for(let i=0;i<bins;i++){const ha=H*(ca[i]/RUNS*100/top),hb=H*(cb[i]/RUNS*100/top);
+  if(mode==='both')parts.push(`<rect x="${X+i*bw+1}" y="${Y-ha}" width="${(bw-2)/2}" height="${ha}" fill="#087d86"/><rect x="${X+i*bw+1+(bw-2)/2}" y="${Y-hb}" width="${(bw-2)/2}" height="${hb}" fill="#e6a14a"/>`);
+  else parts.push(`<rect x="${X+i*bw+1}" y="${Y-ha}" width="${bw-2}" height="${ha}" fill="#087d86"/>`)}
+ for(let k=0;k<=4;k++){const val=mn+(mx-mn)*k/4,x=X+W*k/4;parts.push(`<text x="${x}" y="${Y+25}" font-size="11" text-anchor="middle" fill="#5a7380">${shortMoney(val)}</text>`)}
+ for(const [val,label,color] of [[0,t.breakEven,'#b54f46'],[100000,t.target,'#a77817']])if(val>mn&&val<mx){const x=X+(val-mn)/(mx-mn)*W;parts.push(`<line x1="${x}" x2="${x}" y1="26" y2="${Y}" stroke="${color}" stroke-width="2" stroke-dasharray="5 4"/><text x="${Math.max(75,Math.min(765,x+4))}" y="19" font-size="10" fill="${color}">${label}</text>`)}
+ return `<div class="chart-area"><div class="legend"><span><span class="swatch" style="background:#087d86"></span>${t.a}</span>${mode==='both'?`<span><span class="swatch" style="background:#e6a14a"></span>${t.b}</span>`:''}<span>${t.bars}</span></div><svg viewBox="0 0 925 300" role="img" aria-label="${mode==='both'?t.ariaBoth:t.ariaA}"><text x="73" y="14" font-size="11" fill="#607782">${t.y}</text>${parts.join('')}<text x="473" y="296" font-size="12" text-anchor="middle" fill="#4f6e77">${t.x}</text></svg></div>`
+}
+function step0(){const t=T().p0;const c=t.cells;
+ return `<div class="section-kicker">${T().w[0]}</div><div class="formula">${t.formula}</div>${tbl(t.th,[row([c[0],c[1]],[1]),row([c[2],c[3]],[1]),row([c[4],c[5]],[1]),row([c[6],c[7]],[1])].join(''),[1])}<p class="smallprint">${t.calculation}</p><div class="big-number">$60,000</div><p class="muted">${t.base}</p><div class="prompt entry"><h3>${t.heading}</h3><p>${t.intro}</p><label for="firstDecision">${t.decision}</label><select id="firstDecision">${optionList(T().initial,optInitial,answers.firstDecision)}</select><label for="firstWhy">${t.why}</label><textarea id="firstWhy" rows="2" placeholder="${safe(t.whyPh)}">${safe(answers.firstWhy)}</textarea></div>`}
+function step1(){const t=T().p1;
+ return `<div class="section-kicker">${T().w[1]}</div>${tbl(t.th,t.rows.map(r=>row([`<b>${r[0]}</b>`,r[1],r[2],r[3]])).join(''))}${callout(t.mode,t.modeText)}<div class="two">${card(t.logTitle,`<p>${t.logText}</p>`)}${card(t.assumptions,`<p>${t.assumptionsText}</p>`)}</div><p class="smallprint">${t.caution}</p>`}
+function step2(){const t=T().p2;
+ return `<div class="section-kicker">${T().w[2]}</div><div class="controls"><div><label for="seedInput">${t.seed}</label><input id="seedInput" type="number" min="1" max="4294967295" step="1" value="${seed}" aria-describedby="seedHint"></div><button type="button" class="btn primary" id="runSim">${t.run}</button><button type="button" class="btn" id="resetSeed">${t.restore}</button></div><p id="seedHint" class="smallprint">${t.seedNote}</p><p class="running-status" id="runStatus" role="status">${sim&&!dirty?t.ready:t.missing}</p><div class="formula">${t.formula}</div>${sim&&!dirty?`<h3>${t.five}</h3><p class="smallprint">${t.fiveNote}</p>${tbl(t.th,sim.rows.slice(0,5).map((r,i)=>row([i+1,number(Math.round(r.d)),'$'+r.price.toFixed(2),'$'+r.costA.toFixed(2),`<b>${money(r.profitA)}</b>`],[1,2,3,4])).join(''),[1,2,3,4])}<div class="two">${card(t.size,`<div class="subvalue">${t.sizeValue}</div><p>${t.sizeText}</p>`)}${card(t.reproducible,`<div class="subvalue">${t.seedValue} ${sim.seed}</div><p>${t.seedText}</p>`)}</div>`:empty()}${callout(t.checkpoint,t.checkpointText)}`}
+function step3(){const t=T().p3;
+ return `<div class="section-kicker">${T().w[3]}</div>${sim&&!dirty?`<h3>${t.title}</h3>${makeHist('A')}${metrics(sim.A)}${callout(t.pctTitle,t.pctNote)}`:empty()}${field('risk',t.question,t.ph,3)}`}
+function step4(){const t=T().p4;
+ return `<div class="section-kicker">${T().w[4]}</div><p class="smallprint">${t.intro}</p>${sim&&!dirty?`<div class="bars">${sim.rho.map(x=>`<div class="bar-row"><span>${variableLabel(x.key)}</span><div class="bar-track"><div class="bar-fill" style="width:${(Math.abs(x.r)*100).toFixed(2)}%;background:${x.r>=0?'#087d86':'#cc655d'}"></div></div><b>${x.r>=0?'+':''}${decimal(x.r)}</b></div>`).join('')}</div>${card(t.strongest,`<p><b>${variableLabel(sim.rho[0].key)}</b> (Spearman ρ = ${sim.rho[0].r>=0?'+':''}${decimal(sim.rho[0].r)}). ${t.explanation}</p>`)}`:empty()}${field('sensitivity',t.question,t.ph,3)}${callout(t.caution,t.cautionText)}`}
+function step5(){const t=T().p5;
+ const assumptionRows=[row([t.cost,t.ca,t.cb]),row([t.pars,'μ = 3.458; σ = 0.1245','μ = 3.399; σ = 0.0666']),row([t.fixed,'$120,000','$140,000']),`<tr>${cell(t.market)}<td colspan="2">${t.marketShared}</td></tr>`].join('');
+ const keys=['mean','sd','p10','median','p90','loss','target'];
+ const summary=sim&&!dirty?keys.map((key,i)=>row([t.resultLabels[i],key==='loss'||key==='target'?pct(sim.A[key]):money(sim.A[key]),key==='loss'||key==='target'?pct(sim.B[key]):money(sim.B[key])],[1,2])).join(''):'';
+ return `<div class="section-kicker">${T().w[5]}</div>${tbl(t.th,assumptionRows)}<div class="formula">${t.formula}</div>${sim&&!dirty?`${makeHist('both')}${tbl(t.thResults,summary,[1,2])}<div class="two">${card(t.diff,`<div class="subvalue">${money(sim.B.mean-sim.A.mean)}</div><p>${t.diffNote}</p>`)}${card(t.win,`<div class="subvalue">${pct(sim.win)}</div><p>${t.winNote}</p>`)}</div>`:empty()}${callout(t.note,t.noteText)}`}
+function step6(){const t=T().p6;
+ return `<div class="section-kicker">${T().w[6]}</div><p class="simple-intro">${t.intro}</p>${sim&&!dirty?`${tbl(t.th,sim.convergence.map(r=>`<tr${r.n===10000?' class="highlight"':''}>${[number(r.n),money(r.A.mean),pct(r.A.loss),money(r.B.mean),pct(r.B.loss)].map(v=>cell(v,'num')).join('')}</tr>`).join(''),[0,1,2,3,4])}${card(t.look,`<p>${t.lookText}</p>`)}`:empty()}${callout(t.note,t.noteText)}`}
+function chooseLabel(kind,value){let ix=(kind==='first'?optInitial:optChoice).indexOf(value);return ix>=0?(kind==='first'?T().initial:T().choices)[ix]:value}
+function reportText(){const t=T().report,has=sim&&!dirty,missing=t.missing;
+ const out=[t.title,t.subtitle,`${lang==='es'?'Autor del simulador':'Simulator author'}: Dr. Boris C. Herbas Torrico · boris.herbas@tec.mx`,`${t.student}: ${answers.name.trim()||missing}`,`${t.studentID}: ${answers.studentID.trim()||missing}`,`${t.group}: ${answers.group.trim()||missing}`,'',t.s1,t.decision,t.formula,t.base,`${t.initial}: ${chooseLabel('first',answers.firstDecision)||missing}`,`${t.reason}: ${answers.firstWhy.trim()||missing}`,'',t.s2,t.demand,t.demandMean,t.price,t.costA,t.costB,t.indep,`${t.runs}: ${RUNS}. ${t.seed}: ${seed}.`,'',t.s3];
+ if(has){out.push(`${t.metric}: ${t.sa} | ${t.sb}`);
+  for(const [i,key] of ['mean','sd','p10','median','p90','min','max','loss','target'].entries())out.push(`${t.metrics[i]}: ${key==='loss'||key==='target'?pct(sim.A[key]):money(sim.A[key])} | ${key==='loss'||key==='target'?pct(sim.B[key]):money(sim.B[key])}`);
+  out.push(`${t.win}: ${pct(sim.win)}`,`${t.diff}: ${money(sim.B.mean-sim.A.mean)}`);
+ }else out.push(t.noSim);
+ out.push('',t.s4,answers.risk.trim()||missing,'',t.s5);
+ if(has)for(const d of sim.rho)out.push(`${variableLabel(d.key)}: ${t.rho} = ${d.r>=0?'+':''}${decimal(d.r)}`);else out.push(t.noSim);
+ out.push(`${t.sensitivity}: ${answers.sensitivity.trim()||missing}`,'',t.s6);
+ if(has)for(const x of sim.convergence)out.push(`${number(x.n)} ${t.iterations}: ${t.meanA} ${money(x.A.mean)}, ${t.lossA} ${pct(x.A.loss)}; ${t.meanB} ${money(x.B.mean)}, ${t.lossB} ${pct(x.B.loss)}.`);else out.push(t.noSim);
+ out.push('',t.s7,`${t.strategy}: ${chooseLabel('choice',answers.choice)||missing}`,`${t.evidence}: ${answers.evidence.trim()||missing}`,`${t.limitation}: ${answers.limitations.trim()||missing}`,'',t.footer,t.tool);
+ return out.join('\n');
+}
+function step7(){const t=T().p7;
+ return `<div class="section-kicker">${T().w[7]}</div>${callout(t.introLabel,t.intro)}<div class="prompt entry"><h3>${t.heading}</h3><label for="choice">${t.choiceLabel}</label><select id="choice">${optionList(t.choices||T().choices,optChoice,answers.choice)}</select><label for="evidence">${t.evidence}</label><textarea id="evidence" rows="4" placeholder="${safe(t.evidencePh)}">${safe(answers.evidence)}</textarea><label for="limitations">${t.limits}</label><textarea id="limitations" rows="3" placeholder="${safe(t.limitsPh)}">${safe(answers.limitations)}</textarea></div><h3>${t.report}</h3><div id="reportAlert" class="report-alert" aria-live="polite"></div><textarea id="reportText" class="reportbox" readonly aria-label="${t.reportAria}">${safe(reportText())}</textarea><div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:12px"><button type="button" class="btn primary" id="copyReport">${t.copy}</button><button type="button" class="btn" id="downloadReport">${t.download}</button></div><p id="copyStatus" class="running-status" role="status">${t.copyNote}</p><p class="smallprint">${t.reportNote}</p>`}
+const stepFuncs=[step0,step1,step2,step3,step4,step5,step6,step7];
+function bindAnswer(id,key=id){const e=$(id);if(!e)return;e.addEventListener(e.tagName==='SELECT'?'change':'input',()=>{answers[key]=e.value;save();if(active===7){$('reportText').value=reportText();updateCompletion()}})}
+function updateCompletion(){const miss=required.filter(k=>!(answers[k]||'').trim());const e=$('reportAlert');if(e){const complete=sim&&!dirty&&miss.length===0;e.className='report-alert '+(complete?'complete':'incomplete');e.textContent=complete?T().p7.complete:tx(T().p7.incomplete,{n:miss.length})}}
+function render(){if($('authorCaption'))$('authorCaption').textContent=lang==='es'?'Autor del simulador':'Simulator author';translateShell();buildNav();const t=T();const s=t.stages[active];
+ $('stepBadge').textContent=`${t.step} ${String(active+1).padStart(2,'0')} / 08`;
+ $('timeLabel').textContent=s[1];$('stageTitle').textContent=s[0];$('stageLead').textContent=s[2];$('stageBody').innerHTML=stepFuncs[active]();
+ $('positionText').textContent=tx(t.position,{n:active+1});$('prevBtn').disabled=active===0;$('nextBtn').textContent=active===7?t.done:t.next;$('nextBtn').disabled=active===7;
+ status();if(active===0){bindAnswer('firstDecision');bindAnswer('firstWhy')}if(active===3)bindAnswer('risk');if(active===4)bindAnswer('sensitivity');
+ if(active===7){bindAnswer('choice');bindAnswer('evidence');bindAnswer('limitations');updateCompletion();$('copyReport').addEventListener('click',copyReport);$('downloadReport').addEventListener('click',()=>download('Monte_Carlo_Report_'+lang.toUpperCase()+'.txt',reportText()))}
+ if(active===2){$('runSim').addEventListener('click',run);$('resetSeed').addEventListener('click',()=>{seed=2026;sim=null;wasRun=false;dirty=false;save();render()});
+  $('seedInput').addEventListener('input',()=>{const n=Number($('seedInput').value);if(Number.isInteger(n)&&n>=1&&n<=4294967295){seed=n;sim=null;dirty=true;wasRun=false;save();$('runStatus').textContent=t.seedChanged;status()}})}
+}
+function run(){const n=Number($('seedInput').value);if(!Number.isSafeInteger(n)||n<1||n>4294967295){$('runStatus').textContent=T().seedInvalid;return}
+ seed=n;const languageAtStart=lang;$('runStatus').textContent=T().calculating;$('runSim').disabled=true;
+ setTimeout(()=>{try{sim=simulate(seed);dirty=false;wasRun=true;save();render();$('runStatus').textContent=tx(T().success,{seed});}catch(e){$('runStatus').textContent=T().simError;$('runSim').disabled=false;console.error(e)}},30)
+}
+async function copyReport(){const missing=required.filter(k=>!(answers[k]||'').trim());if(!sim||dirty||missing.length){$('copyStatus').textContent=T().copyIncomplete;return}
+ const report=reportText(),ta=$('reportText');ta.value=report;let ok=false;
+ try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(report);ok=true}}catch(e){}
+ if(!ok){try{ta.focus();ta.select();ok=document.execCommand('copy')}catch(e){}}
+ $('copyStatus').textContent=ok?T().copySuccess:T().copyFallback;
+}
+function download(name,content){const blob=new Blob([content],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+function reset(){if(!confirm(T().resetConfirm))return;for(const k in answers)answers[k]='';for(const [field,key] of [['studentName','name'],['studentID','studentID'],['studentGroup','group']])$(field).value='';sim=null;dirty=false;wasRun=false;seed=2026;active=0;save();render()}
+restore();
+for(const [id,key] of [['studentName','name'],['studentID','studentID'],['studentGroup','group']]){$(id).value=answers[key];$(id).addEventListener('input',()=>{answers[key]=$(id).value;save();if(active===7){$('reportText').value=reportText();updateCompletion()}})}
+$('chooseEs').onclick=()=>language('es');$('chooseEn').onclick=()=>language('en');
+$('prevBtn').onclick=()=>go(active-1);$('nextBtn').onclick=()=>go(active+1);$('resetActivity').onclick=reset;
+render();
+
+</script>
+</body></html>
